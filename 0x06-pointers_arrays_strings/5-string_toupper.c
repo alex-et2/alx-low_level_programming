@@ -1,26 +1,22 @@
-#include "main.h"
+#include "holberton.h"
 
 /**
- * leet - Encodes a string to 1337.
- * @str: The string to be encoded.
+ * string_toupper - Changes all lowercase letters
+ *                  of a string to uppercase.
+ * @str: The string to be changed.
  *
- * Return: A pointer to the encoded string.
+ * Return: A pointer to the changed string.
  */
-char *leet(char *str)
+char *string_toupper(char *str)
 {
-	int indx1 = 0, indx2;
-	char leet[8] = {'O', 'L', '?', 'E', 'A', '?', '?', 'T'};
+	int index = 0;
 
-	while (str[indx1])
+	while (str[index])
 	{
-		for (indx2 = 0; indx2 <= 7; indx2++)
-		{
-			if (str[indx1] == leet[indx2] ||
-			    str[indx1] - 32 == leet[indx2])
-				str[indx1] = indx2 + '0';
-		}
+		if (str[index] >= 'a' && str[index] <= 'z')
+			str[index] -= 32;
 
-		indx1++;
+		index++;
 	}
 
 	return (str);
