@@ -1,47 +1,48 @@
-#include "holberton.h"
+#include "main.h"
 
 /**
- * read_textfile - reads a text file and prints it.
+ * read_textfile - read a text file and print it to stdout
+ * @filename: the name of the file to read
+ * @letters: the number of letters to be read and printed
  *
- * @filename: const char type pointer to file to be read
- *
- * @letters: size_t type
- *
- * Return: 0
+ * Return: If filename is NULL, the file cannot be opened or read, or
+ * write fails or returns an unexpected number of bytes, return 0.
+ * Otherwise, return the actual number of letters read and printed.
  */
-
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	int fp;
-	ssize_t fpRead, fpWrite, fpClose;
-	char *lineBuffer;
+	char *buffer = NULL;
+	ssize_t b_read;
+	ssize_t b_written;
+	int fd;
 
-	if (filename == NULL)
+	if (!(filename && letters))
 		return (0);
 
-	lineBuffer = malloc(sizeof(char) * letters);
-
-	if (lineBuffer == NULL)
-		return (-1);
-
-	fp = open(filename, O_RDONLY);
-
-	if (fp == -1)
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
 		return (0);
 
-	fpRead = read(fp, lineBuffer, letters);
+	buffer = malloc(sizeof(char) * letters);
+	if (!buffer)
+		return (0);
 
-	if (fpRead == -1)
-		return (-1);
+	b_read = read(fd, buffer, letters);
+	close(fd);
 
-	fpWrite = write(STDOUT_FILENO, lineBuffer, fpRead);
+	if (b_read < 0)
+	{
+		free(buffer);
+		return (0);
+	}
+	if (!b_read)
+		b_read = letters;
 
-	if (fpWrite == -1)
-		return (-1);
-	fpClose = close(fp);
+	b_written = write(STDOUT_FILENO, buffer, b_read);
+	free(buffer);
 
-	if (fpClose == -1)
-		return (-1);
+	if (b_written < 0)
+		return (0);
 
-	return (fpRead);
+	return (b_written);
 }
